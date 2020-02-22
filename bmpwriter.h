@@ -15,8 +15,9 @@ int putpixel(int x,int y,int r,int g,int b)
   _BMP[bo+2]=r;
 }
 
-int bmpsave(const char *A,int width,int height,const char *I)
+int bmpsave(const char *A,int width,int height)
 {
+    const char *I=_BMP;
     int row_width=((width*3+3)/4)*4,padding=row_width-width*3;
     int bs,filesize=row_width*height+54;
     bs=row_width*height;
