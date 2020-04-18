@@ -1,11 +1,11 @@
+//API: 2
 #ifndef __BMP_WRITER__
 #define __BMP_WRITER__
 #include<stdio.h>
 #include<stdlib.h>
-int _BMPX=3,_BMPY=4;
+int _BMPX,_BMPY;
 unsigned char *_BMP;
-FILE *_BMPfp,*_BMPfp2;
-//#define _BMPTEST 
+
 int putpixel(int x,int y,int r,int g,int b)
 {
   int ry=_BMPY-y;
@@ -15,15 +15,20 @@ int putpixel(int x,int y,int r,int g,int b)
   _BMP[bo+2]=r;
 }
 
-int bmpsave(const char *A,int width,int height)
+int bmpsave(const char *A)
 {
-    const char *I=_BMP;
+    int width=_BMPX,height=_BMPY;
+	unsigned char* I=_BMP;
     int row_width=((width*3+3)/4)*4,padding=row_width-width*3;
-    int bs,filesize=row_width*height+54;
+    long bs,filesize=row_width*height+54;
     bs=row_width*height;
-    _BMPfp=fopen(A,"wb");
-    char *_BMPI;
-    _BMPI=malloc(filesize);
+    FILE* _BMPfp=fopen(A,"wb");
+    unsigned char *_BMPI;
+    _BMPI=(unsigned char*)malloc(filesize);
+    if(!_BMPI)printf("BMP WRITER MEMORY ALLOCATION ERROR");
+    int i;
+    for(i=6;i<54;i++)
+      _BMPI[i]=0;
     _BMPI[0]=66;_BMPI[1]=77;
     _BMPI[2]=filesize%256;filesize=filesize/256;
     _BMPI[3]=filesize%256;filesize=filesize/256;
@@ -42,9 +47,7 @@ int bmpsave(const char *A,int width,int height)
     _BMPI[38]=19;
     _BMPI[39]=11;
     _BMPI[42]=19;
-    _BMPI[43]=11;
-    
-    
+    _BMPI[43]=11; 
     int x,y;
     for(y=0;y<height;y++)
     {
@@ -57,16 +60,20 @@ int bmpsave(const char *A,int width,int height)
        for(x=0;x<padding;x++)
            _BMPI[y*row_width+width*3+x+54]=x;
     }
-    filesize=row_width*height*3+54; 
+    filesize=row_width*height+54;
     fwrite(_BMPI,filesize,1,_BMPfp);
     fclose(_BMPfp);
     return filesize;
 }
 void bmpinit(int X,int Y)
 {
-  _BMP=(char*)malloc(X*Y*3);
+  _BMP=(unsigned char*)malloc(X*Y*3);
+  if(!_BMP)printf("init ERROR");
   _BMPX=X,_BMPY=Y;
 }
-
-
+void bmpfree()
+{
+	free(_BMP);
+}
 #endif
+
