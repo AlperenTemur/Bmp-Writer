@@ -16,10 +16,21 @@ void _BMPbmpdraw()
    for(j=0;j<_BMPY;j++)
      putpixel(i+1,j+1,255,140,6);
 }
+void _BMPbmpdraw2()
+{
+  int i=0,j=0;
+  for(;i<_BMPX;i++)
+   for(j=0;j<_BMPY;j++)
+     putpixel(i+1,j+1,(i+j)%255,(1000-i-j)%255,i%255);
+}
 main()
 {
    bmpinit(3,4);
    _BMPbmpdraw();
-   bmpsave("test.bmp",3,4);
+   bmpsave("test.bmp");
    _BMPanalyze("test.bmp");
+    bmpinit(317,411);
+   _BMPbmpdraw2();
+   bmpsave("test2.bmp");
+   bmpfree();
 }
