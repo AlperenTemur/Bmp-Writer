@@ -1,6 +1,6 @@
 # Bmp-Writer
 Bmp file writer
-#API
+# API
 bmpinit(WIDTH,HEIGHT);
 putpixel(x,y,red,green,blue);
 bmpsave("bitmap.bmp");
